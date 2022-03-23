@@ -1,21 +1,10 @@
-﻿using FeatureToggle.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
-namespace FeatureToggle.Common
+﻿namespace FeatureToggle.Common
 {
     public static class FeatureGenServiceCollectionExtensions
     {
-        public static IServiceCollection AddFeatureGen(this IServiceCollection services, string featureURL)
+        public static IServiceCollection AddFeatureGen(this IServiceCollection services, string conectionURL)
         {
-            services.Configure(delegate (MvcOptions c) //???!!!
-            {
-                //c.Conventions.Add(new SwaggerApplicationConvention());
-                
-                throw new NotImplementedException();
-            });
-            services.AddTransient<IFeatureToggle, FeatureToggle>();
-
-            return services;
+            throw new NotImplementedException();
         }
 
         public static void ConfigureFeatureGen(this IServiceCollection services, Action<FeatureToggle> setupAction)

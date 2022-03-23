@@ -2,6 +2,6 @@
 {
     public interface IFeatureToggle
     {
-        public bool IsEnable(string featureName);
+        public string EnableFeatures();
     }
 }

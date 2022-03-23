@@ -10,21 +10,21 @@ namespace FeatureToggle.Controllers
         private readonly ILogger<FeatureToggleController> _logger;
         private readonly IFeatureToggle _feature;
 
-        public FeatureToggleController(ILogger<FeatureToggleController> logger, IFeatureToggle feature)
+        public FeatureToggleController(ILogger<FeatureToggleController> logger, FeatureToggle feature)
         {
             _logger = logger;
             _feature = feature;
         }
 
+        /// <summary>
+        /// Get list of features in json
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         [HttpGet(Name = "features")]
         public string Get()
         {
-            if (_feature.IsEnable("fetureOne"))
-            {
-                throw new NotImplementedException();
-            }
-
-            throw new NotImplementedException();
+            return _feature.EnableFeatures(); 
         }
     }
 }
