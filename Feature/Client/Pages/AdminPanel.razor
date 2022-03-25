@@ -1,0 +1,55 @@
+﻿@page "/"
+@inject IFeatureMaster _featureMaster
+
+<PageTitle>Admin Panel</PageTitle>
+
+<h3>Add new feature</h3>
+
+<div class="form-group">
+    <label for="movie-name">Name</label>
+    <input @bind="_nameNewFeture" type="text" class="form-control" id="movie-name" />
+    <p></p>
+    <button @onclick="@(() => Add(_nameNewFeture))" class="btn btn-primary">Add</button>
+</div>
+<p></p>
+
+<h3>All Features</h3>
+
+@if (_features is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var feat in _features)
+            {
+                <tr>
+                    <td>@feat.Name</td>
+                    <td>@feat.Status</td>
+                    <td>
+                        <button @onclick="@(() => OnOffButton(feat))" class="btn btn-primary">Switcher</button>
+                    </td>
+                    <td>
+                        <button @onclick="@(() => Delete(feat.Name))" class="btn btn-primary">Delete</button>
+                    </td>
+                    <td>
+                        <button @onclick="@(() => ShowEditFeature(feat))" class="btn btn-primary">Edit</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

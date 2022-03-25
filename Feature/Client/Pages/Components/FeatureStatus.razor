@@ -1,0 +1,39 @@
+﻿<tr>
+    <td>@Name</td>
+    <td>@Status</td>
+    <td>
+        <button style="background-color:@ButtonColor()"
+                @onclick="@(()=>OnOff.InvokeAsync(Name))">
+        </button>
+    </td>
+    <td>
+        <button class="btn-red" @onclick="@(()=>Delete.InvokeAsync(Name))">
+            Delete
+        </button>
+    </td>
+    <td>
+        <button @onclick="@(() => Edit.InvokeAsync())" class="btn btn-primary">Edit</button>
+    </td>
+</tr>
+
+@code {
+    [Parameter]
+    public string? Name { get; set; }
+
+    [Parameter]
+    public bool Status { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnOff { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Delete { get; set; }
+
+    [Parameter]
+    public EventCallback Edit { get; set; }
+
+    private ConsoleColor ButtonColor()
+    {
+        return Status ? ConsoleColor.Green : ConsoleColor.Red;
+    }
+}

@@ -1,0 +1,15 @@
+﻿@if (IsActive)
+{
+    <p>@Messege</p>
+}
+else
+{
+    <p></p>
+}
+
+@code {
+    [Parameter]
+    public string? Messege { get; set; }
+    [Parameter]
+    public bool IsActive { get; set; }
+}
