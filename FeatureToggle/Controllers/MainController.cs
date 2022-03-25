@@ -5,9 +5,9 @@ namespace FeatureToggle.Controllers
 {
     public class MainController : Controller
     {
-        private readonly IFeatureToggle _toggle;
+        private readonly IFeatures _toggle;
 
-        public MainController(IFeatureToggle toggle)
+        public MainController(IFeatures toggle)
         {
             _toggle = toggle;
         }

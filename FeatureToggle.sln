@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeatureToggle", "FeatureToggle\FeatureToggle.csproj", "{6E23BEDC-51BA-4190-9C02-E0E3C97C4FC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureToggleProject", "FeatureToggleProject\FeatureToggleProject.csproj", "{FA5BCB58-8193-4D29-9067-F5F431CDE281}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeaturesMaster", "FeatureToggleProject\FeaturesMaster.csproj", "{FA5BCB58-8193-4D29-9067-F5F431CDE281}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

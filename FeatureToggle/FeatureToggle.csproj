@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FeatureToggleProject\FeatureToggleProject.csproj" />
+    <ProjectReference Include="..\FeatureToggleProject\FeaturesMaster.csproj" />
   </ItemGroup>
 
 </Project>

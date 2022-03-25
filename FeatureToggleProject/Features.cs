@@ -1,16 +1,14 @@
 ﻿using Interfaces;
 
-namespace testzxc
+namespace FeaturesMaster
 {
-    public class FeatureToggle : IFeatureToggle
+    public class Features : IFeatures
     {
         private readonly string _nameJSON;
 
-        public FeatureToggle(string json)
+        public Features(string json)
         {
             _nameJSON = json;
-
-
         }
 
         public string EnableFeatures()

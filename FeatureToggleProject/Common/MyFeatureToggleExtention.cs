@@ -1,7 +1,6 @@
-﻿using Interfaces;
-using Microsoft.Extensions;
+﻿using FeaturesMaster;
+using Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using testzxc;
 
 namespace Common
 {
@@ -9,21 +8,13 @@ namespace Common
     {
         public static IServiceCollection AddFeatureGen(this IServiceCollection services, string conectionURL)
         {
-            services.AddSingleton<IFeatureToggle>(provider => new FeatureToggle(conectionURL));
+            services.AddSingleton((Func<IServiceProvider, IFeatures>)(provider => new Features(conectionURL)));
             return services;
         }
 
-        public static IServiceCollection AddFeatureGen(this IServiceCollection services, Action<MvcOptions>? configure)
+        public static IServiceCollection AddFeatureGen(this IServiceCollection services, Action<AddFeatureGenConfiguration>? configure)
         {
             throw new NotImplementedException();
         }
-    }
-
-
-    public class MvcOptions
-    { 
-        public bool? Enable { get; set; }
-        public string ? Description { get; set; }
-        public bool? Disable { get; set; }
     }
 }
