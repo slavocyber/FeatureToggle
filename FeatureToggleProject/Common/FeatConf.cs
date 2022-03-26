@@ -4,6 +4,6 @@
     {
         public bool? SomeConfigOne { get; set; }
 
-        //some configuration...
+        //some configurations...
     }
 }

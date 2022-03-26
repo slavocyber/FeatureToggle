@@ -17,7 +17,11 @@ namespace FeatureToggle
             services.AddControllers();
             services.AddMvc();
 
-            services.AddFeatureGen("Toggle.json");
+            services.AddFeatureGen("Toggle.json",
+                () => new()
+                {
+                    SomeConfigOne = false
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

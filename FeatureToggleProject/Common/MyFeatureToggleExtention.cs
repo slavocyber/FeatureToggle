@@ -6,15 +6,10 @@ namespace Common
 {
     public static class FeatureGenServiceCollectionExtensions
     {
-        public static IServiceCollection AddFeatureGen(this IServiceCollection services, string conectionURL)
+        public static IServiceCollection AddFeatureGen(this IServiceCollection services, string conectionURL, Func<FeatConf> configure)
         {
-            services.AddSingleton((Func<IServiceProvider, IFeatures>)(provider => new Features(conectionURL)));
+            services.AddSingleton<IFeatures, Features>(provider => new Features(conectionURL, configure.Invoke()));
             return services;
-        }
-
-        public static IServiceCollection AddFeatureGen(this IServiceCollection services, Action<FeatConf>? configure)
-        {
-            throw new NotImplementedException();
         }
     }
 }
