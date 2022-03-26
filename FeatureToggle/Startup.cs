@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using FeaturesMaster.Common;
+using FeaturesMaster.Common.MyExtantions;
 
 namespace FeatureToggle
 {
@@ -17,12 +18,13 @@ namespace FeatureToggle
             services.AddControllers();
             services.AddMvc();
 
-            services.AddFeatureGen("Toggle.json",
+            services.AddFeatureManeger("Toggle.json",
                 config =>
                 {
                     config.SomeConfigOne = true;
                     config.SomeConfigTwo = false;
-                });
+                })
+                .UseDisabledFeaturesHandler();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,8 +1,7 @@
-﻿namespace Interfaces
+﻿namespace FeaturesMaster.Interfaces
 {
     public interface IFeatures
     {
-        public Dictionary<string, bool> EnableFeatures();
-        public string GetData();
+        public string EnableFeatures();
     }
 }

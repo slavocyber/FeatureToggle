@@ -1,5 +1,4 @@
-﻿using Common;
-using Interfaces;
+﻿using FeaturesMaster.Interfaces;
 
 namespace FeaturesMaster
 {
@@ -12,12 +11,7 @@ namespace FeaturesMaster
             _jsonAllFeatures = json;
         }
 
-        public Dictionary<string, bool> EnableFeatures()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetData()
+        public string EnableFeatures()
         {
             var sr = new StreamReader(_jsonAllFeatures);
             var str = sr.ReadToEnd();
