@@ -18,12 +18,7 @@ namespace FeatureToggle
             services.AddControllers();
             services.AddMvc();
 
-            services.AddFeatureManeger("Toggle.json",
-                config =>
-                {
-                    config.SomeConfigOne = true;
-                    config.SomeConfigTwo = false;
-                })
+            services.AddFeatureManeger("Toggle.json")
                 .UseDisabledFeaturesHandler();
         }
 
