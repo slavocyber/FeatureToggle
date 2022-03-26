@@ -14,9 +14,9 @@ namespace FeatureToggle.Controllers
 
         public IActionResult Index()
         {
-            var zxc = Json(_toggle.GetData());
+            var viewListOfFeat = Json(_toggle.EnableFeatures());
 
-            return View(zxc);
+            return View(viewListOfFeat);
         }
     }
 }

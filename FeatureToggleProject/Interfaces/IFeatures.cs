@@ -2,7 +2,7 @@
 {
     public interface IFeatures
     {
-        public string EnableFeatures();
+        public Dictionary<string, bool> EnableFeatures();
         public string GetData();
     }
 }

@@ -6,9 +6,13 @@ namespace Common
 {
     public static class FeatureGenServiceCollectionExtensions
     {
-        public static IServiceCollection AddFeatureGen(this IServiceCollection services, string conectionURL, Func<FeatConf> configure)
+        public static IServiceCollection AddFeatureGen(this IServiceCollection services, string conectionURL, Action<FeatConf> configController)
         {
-            services.AddSingleton<IFeatures, Features>(provider => new Features(conectionURL, configure.Invoke()));
+            //some features configurations
+            var config = new FeatConf();
+            configController(config);
+
+            services.AddSingleton<IFeatures, Features>(provider => new Features(conectionURL));
             return services;
         }
     }

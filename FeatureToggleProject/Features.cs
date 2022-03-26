@@ -5,23 +5,21 @@ namespace FeaturesMaster
 {
     public class Features : IFeatures
     {
-        private readonly string _nameJSON;
-        private readonly FeatConf _config;
+        private readonly string _jsonAllFeatures;
 
-        public Features(string json, FeatConf config)
+        public Features(string json)
         {
-            _nameJSON = json;
-            _config = config;
+            _jsonAllFeatures = json;
         }
 
-        public string EnableFeatures()
+        public Dictionary<string, bool> EnableFeatures()
         {
             throw new NotImplementedException();
         }
 
         public string GetData()
         {
-            var sr = new StreamReader(_nameJSON);
+            var sr = new StreamReader(_jsonAllFeatures);
             var str = sr.ReadToEnd();
             sr.Close();
             return str;

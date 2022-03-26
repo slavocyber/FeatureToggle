@@ -18,9 +18,10 @@ namespace FeatureToggle
             services.AddMvc();
 
             services.AddFeatureGen("Toggle.json",
-                () => new()
+                config =>
                 {
-                    SomeConfigOne = false
+                    config.SomeConfigOne = true;
+                    config.SomeConfigTwo = false;
                 });
         }
 

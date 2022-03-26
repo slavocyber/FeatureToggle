@@ -2,8 +2,9 @@
 {
     public class FeatConf
     {
-        public bool? SomeConfigOne { get; set; }
+        public bool SomeConfigOne { get; set; }
+        public bool SomeConfigTwo { get; set; }
 
-        //some configurations...
+        //other configurations...
     }
 }
