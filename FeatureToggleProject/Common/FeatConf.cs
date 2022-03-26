@@ -1,6 +1,6 @@
 ﻿namespace Common
 {
-    public class AddFeatureGenConfiguration
+    public class FeatConf
     {
         public bool? SomeConfigOne { get; set; }
 

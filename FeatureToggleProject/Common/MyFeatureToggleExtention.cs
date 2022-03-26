@@ -12,7 +12,7 @@ namespace Common
             return services;
         }
 
-        public static IServiceCollection AddFeatureGen(this IServiceCollection services, Action<AddFeatureGenConfiguration>? configure)
+        public static IServiceCollection AddFeatureGen(this IServiceCollection services, Action<FeatConf>? configure)
         {
             throw new NotImplementedException();
         }
