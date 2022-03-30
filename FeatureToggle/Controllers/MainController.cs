@@ -1,22 +1,21 @@
 ﻿using FeaturesMaster.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FeatureToggle.Controllers
+namespace FeatureToggle.Controllers;
+
+public class MainController : Controller
 {
-    public class MainController : Controller
+    private readonly IFeatures _toggle;
+
+    public MainController(IFeatures toggle)
     {
-        private readonly IFeatures _toggle;
+        _toggle = toggle;
+    }
 
-        public MainController(IFeatures toggle)
-        {
-            _toggle = toggle;
-        }
+    public IActionResult Index()
+    {
+        var viewListOfFeat = Json(_toggle.EnableFeatures());
 
-        public IActionResult Index()
-        {
-            var viewListOfFeat = Json(_toggle.EnableFeatures());
-
-            return View(viewListOfFeat);
-        }
+        return View(viewListOfFeat);
     }
 }

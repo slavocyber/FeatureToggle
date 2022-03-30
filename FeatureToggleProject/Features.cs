@@ -1,22 +1,21 @@
 ﻿using FeaturesMaster.Interfaces;
 
-namespace FeaturesMaster
+namespace FeaturesMaster;
+
+public class Features : IFeatures
 {
-    public class Features : IFeatures
+    private readonly string _jsonAllFeatures;
+
+    public Features(string json)
     {
-        private readonly string _jsonAllFeatures;
+        _jsonAllFeatures = json;
+    }
 
-        public Features(string json)
-        {
-            _jsonAllFeatures = json;
-        }
-
-        public string EnableFeatures()
-        {
-            var sr = new StreamReader(_jsonAllFeatures);
-            var str = sr.ReadToEnd();
-            sr.Close();
-            return str;
-        }
+    public string EnableFeatures()
+    {
+        var sr = new StreamReader(_jsonAllFeatures);
+        var str = sr.ReadToEnd();
+        sr.Close();
+        return str;
     }
 }

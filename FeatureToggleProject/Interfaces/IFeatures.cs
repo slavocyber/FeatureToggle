@@ -1,7 +1,6 @@
-﻿namespace FeaturesMaster.Interfaces
+﻿namespace FeaturesMaster.Interfaces;
+
+public interface IFeatures
 {
-    public interface IFeatures
-    {
-        public string EnableFeatures();
-    }
+    public string EnableFeatures();
 }
