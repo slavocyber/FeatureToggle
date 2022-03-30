@@ -17,12 +17,7 @@ public class Startup
         _ = services.AddControllers();
         _ = services.AddMvc();
 
-        _ = services.AddFeatureMaster("Toggle.json")
-            .AddFeatureConfiguration(config =>
-            {
-                config.SomeConfigOne = false;
-                config.SomeConfigTwo = false;
-            });
+        _ = services.AddFeaturesMaster("Toggle.json");
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

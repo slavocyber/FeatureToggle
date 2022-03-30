@@ -5,7 +5,7 @@ namespace FeaturesMaster.Common.Extantions;
 
 public static class FeatureServiceExtensions
 {
-    public static IServiceCollection AddFeatureMaster(this IServiceCollection services, string conectionURL)
+    public static IServiceCollection AddFeaturesMaster(this IServiceCollection services, string conectionURL)
     {
         _ = services.AddSingleton<IFeatures, Features>(provider => new Features(conectionURL));
         return services;
@@ -16,6 +16,8 @@ public static class FeatureServiceExtensions
         //some features configurations
         var config = new FeatConf();
         configController(config);
+
+        //do somethings
 
         throw new NotImplementedException();
     }
