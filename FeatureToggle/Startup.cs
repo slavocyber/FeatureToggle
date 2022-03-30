@@ -1,4 +1,4 @@
-﻿using FeaturesMaster.Common.Extantions;
+﻿using FeatureMaster.Common.Extantions;
 
 namespace FeatureToggle;
 
@@ -17,7 +17,7 @@ public class Startup
         _ = services.AddControllers();
         _ = services.AddMvc();
 
-        _ = services.AddFeaturesMaster("Toggle.json");
+        _ = services.AddFeatureMaster("Toggle.json");
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

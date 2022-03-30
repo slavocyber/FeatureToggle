@@ -1,4 +1,4 @@
-﻿namespace FeaturesMaster.Common;
+﻿namespace FeatureMaster.Common;
 
 public class FeatConf
 {

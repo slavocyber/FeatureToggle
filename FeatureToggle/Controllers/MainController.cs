@@ -1,4 +1,4 @@
-﻿using FeaturesMaster.Interfaces;
+﻿using FeatureMaster.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.Controllers;

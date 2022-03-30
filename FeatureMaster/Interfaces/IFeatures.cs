@@ -1,4 +1,4 @@
-﻿namespace FeaturesMaster.Interfaces;
+﻿namespace FeatureMaster.Interfaces;
 
 public interface IFeatures
 {

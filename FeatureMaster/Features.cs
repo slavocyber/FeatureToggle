@@ -1,6 +1,6 @@
-﻿using FeaturesMaster.Interfaces;
+﻿using FeatureMaster.Interfaces;
 
-namespace FeaturesMaster;
+namespace FeatureMaster;
 
 public class Features : IFeatures
 {
