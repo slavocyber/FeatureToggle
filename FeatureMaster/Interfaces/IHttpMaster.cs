@@ -3,5 +3,5 @@
 internal interface IHttpMaster
 {
     void Dispose();
-    Task<string?> GetJsonData(string URL);
+    Task<string> GetJsonData(string URL);
 }

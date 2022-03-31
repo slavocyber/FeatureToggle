@@ -12,7 +12,7 @@ internal class HttpMaster : IDisposable, IHttpMaster
         _httpClient = new HttpClient();
     }
 
-    public async Task<string?> GetJsonData(string URL)
+    public async Task<string> GetJsonData(string URL)
     {
         try
         {
