@@ -2,20 +2,21 @@
 
 namespace FeatureMaster;
 
-public class Features : IFeatures
+internal class Features : IFeatures
 {
-    private readonly string _jsonAllFeatures;
     private readonly Dictionary<string, bool> _listOfFeatures;
+    private readonly string _cofigURL;
+    private readonly IHttpMaster _httpMaster;
 
-    public Features(string json, Dictionary<string, bool> listOfFeatures)
+    public Features(string cofigURL, IHttpMaster httpMaster)
     {
-        _jsonAllFeatures = json;
-        _listOfFeatures = listOfFeatures;
+        _cofigURL = cofigURL;
+        _httpMaster = httpMaster;
     }
 
-    public string AllFeatures()
+    public string AllFeatures() //delete me!!!
     {
-        var sr = new StreamReader(_jsonAllFeatures);
+        var sr = new StreamReader("Toggle.json");
         var str = sr.ReadToEnd();
         sr.Close();
         return str;
@@ -23,6 +24,11 @@ public class Features : IFeatures
 
     public bool IsEnable(string nameOfFeature)
     {
+        if (_listOfFeatures is null)
+        {
+
+        }
+
         return _listOfFeatures.ContainsKey(nameOfFeature) && _listOfFeatures[nameOfFeature];
     }
 }
