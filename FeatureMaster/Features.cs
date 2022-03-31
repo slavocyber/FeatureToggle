@@ -1,10 +1,13 @@
-﻿using FeatureMaster.Interfaces;
+﻿using System.Text.Json;
+using FeatureMaster.Common.Models;
+using FeatureMaster.Interfaces;
 
 namespace FeatureMaster;
 
 internal class Features : IFeatures
 {
-    private readonly Dictionary<string, bool> _listOfFeatures;
+    private Dictionary<string, bool> _listOfFeatures;
+    private Dictionary<string, bool> _listOfConfigs;
     private readonly string _cofigURL;
     private readonly IHttpMaster _httpMaster;
 
@@ -26,9 +29,22 @@ internal class Features : IFeatures
     {
         if (_listOfFeatures is null)
         {
-
+            UpdateFeaturesData();
         }
 
         return _listOfFeatures.ContainsKey(nameOfFeature) && _listOfFeatures[nameOfFeature];
+    }
+
+    /// <summary>
+    /// Update list of features and configurations
+    /// </summary>
+    private void UpdateFeaturesData()
+    {
+        var jsonStr = _httpMaster.GetJsonData(_cofigURL).Result;
+
+        var featSet = JsonSerializer.Deserialize<FeatureSettingModel>(jsonStr);
+
+        _listOfFeatures = featSet.Features;
+        _listOfConfigs = featSet.Configurations;
     }
 }

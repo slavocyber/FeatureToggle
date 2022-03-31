@@ -5,9 +5,11 @@ namespace FeatureMaster.Common.Extantions;
 
 public static class FeatureServiceExtensions
 {
-    public static IServiceCollection AddFeatureMaster(this IServiceCollection services, string conectionURL)
+    public static IServiceCollection AddFeatureMaster(this IServiceCollection services, string configURL)
     {
-        _ = services.AddSingleton<IFeatures, Features>(provider => new Features(conectionURL));
+        _ = services.AddSingleton<IFeatures, Features>(provider => new Features(configURL, new HttpMaster()))
+            .AddFeatureMasterConfig(cofig => { });
+
         return services;
     }
 
