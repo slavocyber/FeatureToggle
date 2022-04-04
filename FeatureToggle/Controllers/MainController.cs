@@ -1,4 +1,4 @@
-﻿using FeatureMaster.Interfaces;
+﻿using FeatureManager.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureToggle.Controllers;
@@ -14,8 +14,10 @@ public class MainController : Controller
 
     public IActionResult Index()
     {
-        var viewListOfFeat = Json(_toggle.EnableFeatures());
+        //var viewListOfFeat = Json(_toggle.IsEnable(""));
 
-        return View(viewListOfFeat);
+        //return View(viewListOfFeat);
+
+        throw new NotImplementedException();
     }
 }

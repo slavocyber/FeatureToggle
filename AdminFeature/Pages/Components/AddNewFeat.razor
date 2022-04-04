@@ -1,0 +1,25 @@
+﻿<input @bind="@PlaceHolder" />
+<button style="background-color:orange; border-radius: 4px"
+        onclick="@(()=>Add.InvokeAsync(PlaceHolder))">
+    Add
+</button>
+
+@if (InvalidInput)
+{
+    <p style="color:red;height:50px;width:200px">Invalid arguments!</p>
+}
+else
+{
+    <p style="height:50px;width:200px"></p>
+}
+
+@code {
+    [Parameter]
+    public bool InvalidInput { get; set; }
+
+    [Parameter]
+    public string? PlaceHolder { set; get; }
+
+    [Parameter]
+    public EventCallback<string> Add { get; set; }
+}

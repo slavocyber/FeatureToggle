@@ -1,0 +1,68 @@
+﻿<tr>
+    <td>@Name</td>
+    <td>@Status</td>
+    <td>
+        <button style="color: white; background-color:@ButtonColor(); padding: 20px 50px; border-radius: 4px"
+                @onclick="@(()=>OnOff.InvokeAsync(Name))">
+            On / Off
+        </button>
+    </td>
+    <td>
+        <button style="color: white; background-color:red; padding: 20px 50px; border-radius: 4px"
+                @onclick="@(()=>Delete.InvokeAsync(Name))">
+            Delete
+        </button>
+    </td>
+    <td>
+        @if (editButtonStatus)
+        {
+            <p><input @bind="@newName" /></p>
+            <p>
+                <button style="color: white; background-color:blue; border-radius: 4px"
+                    onclick="@(()=>Edit(Name, newName))">
+                    Edit
+                </button>
+            </p>
+        }
+        else
+        {
+            <button style="color: white; background-color:blue; padding: 20px 50px; border-radius: 4px"
+                @onclick="@(()=>editButtonStatus = !editButtonStatus)">
+                Edit
+            </button>
+        }
+    </td>
+</tr>
+
+@code {
+    [Parameter]
+    public string? Name { get; set; }
+
+    [Parameter]
+    public bool Status { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnOff { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Delete { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Add { get; set; }
+
+    private bool editButtonStatus;
+    private string newName;
+
+    private ConsoleColor ButtonColor()
+    {
+        return Status ? ConsoleColor.Green : ConsoleColor.DarkGreen;
+    }
+
+    private void Edit(string oldFeat, string newFeat)
+    {
+        Delete.InvokeAsync(oldFeat);
+        Add.InvokeAsync(newFeat);
+
+        editButtonStatus = !editButtonStatus;
+    }
+}

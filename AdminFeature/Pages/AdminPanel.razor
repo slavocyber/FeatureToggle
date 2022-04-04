@@ -1,0 +1,110 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<PageTitle>Admin Panel</PageTitle>
+
+<h3>Add new feature</h3>
+
+<AddNewFeat Add="@Add"
+            invalidInput="@invalidInput"
+            PlaceHolder="@newFeature"></AddNewFeat>
+
+<h3>All Features</h3>
+
+@if (features == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var feat in features)
+            {
+                <FeatureStatus Delete="@Delete"
+                       OnOff="@OnOffButton"
+                       Name="@feat.Key"
+                       Status="@feat.Value"
+                       Add="@Add"></FeatureStatus>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private const string URL = "FeatureToggle/features.json";
+
+    private string newFeature = "";
+    private bool invalidInput = false;
+    private Dictionary<string, bool>? features;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            //loocking for in the "wwwroot" folder
+            features = await Http.GetFromJsonAsync<Dictionary<string, bool>>(URL)
+            ?? new Dictionary<string, bool>();
+        }
+        catch (HttpRequestException) //non success
+        {
+            //logic..
+
+            throw new HttpRequestException();
+        }
+        catch (NotSupportedException) //when conect type is not valid
+        {
+            //logic..
+
+            throw new NotSupportedException();
+        }
+        catch (JsonException) //invalid json
+        {
+            //logic..
+
+            throw new JsonException();
+        }
+    }
+
+    private void OnOffButton(string key)
+    {
+        features[key] = !features[key];
+
+        _ = UpdateJson();
+    }
+
+    private void Add(string featName)
+    {
+        if (features.ContainsKey(featName))
+        {
+            invalidInput = true;
+            return;
+        }
+
+        features.Add(featName, false);
+
+        _ = UpdateJson();
+    }
+
+    private void Delete(string featName)
+    {
+        features.Remove(featName);
+
+        _ = UpdateJson();
+    }
+
+    private async Task UpdateJson()
+    {
+        invalidInput = false;
+
+        //sent http request to server
+    }
+    }
