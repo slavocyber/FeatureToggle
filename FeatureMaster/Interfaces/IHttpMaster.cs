@@ -1,4 +1,4 @@
-﻿namespace FeatureMaster.Interfaces;
+﻿namespace FeatureManager.Interfaces;
 
 internal interface IHttpMaster
 {

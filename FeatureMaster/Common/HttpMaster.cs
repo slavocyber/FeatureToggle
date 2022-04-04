@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
-using FeatureMaster.Interfaces;
+using FeatureManager.Interfaces;
 
-namespace FeatureMaster.Common;
+namespace FeatureManager.Common;
 internal class HttpMaster : IDisposable, IHttpMaster
 {
     private readonly HttpClient _httpClient;

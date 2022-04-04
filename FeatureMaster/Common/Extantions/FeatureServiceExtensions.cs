@@ -1,7 +1,7 @@
-﻿using FeatureMaster.Interfaces;
+﻿using FeatureManager.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FeatureMaster.Common.Extantions;
+namespace FeatureManager.Common.Extantions;
 
 public static class FeatureServiceExtensions
 {

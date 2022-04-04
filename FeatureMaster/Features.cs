@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
-using FeatureMaster.Common.Models;
-using FeatureMaster.Interfaces;
+using FeatureManager.Common.Models;
+using FeatureManager.Interfaces;
 
-namespace FeatureMaster;
+namespace FeatureManager;
 
 internal class Features : IFeatures
 {
@@ -28,9 +28,7 @@ internal class Features : IFeatures
     public bool IsEnable(string nameOfFeature)
     {
         if (_listOfFeatures is null)
-        {
             UpdateFeaturesData();
-        }
 
         return _listOfFeatures.ContainsKey(nameOfFeature) && _listOfFeatures[nameOfFeature];
     }

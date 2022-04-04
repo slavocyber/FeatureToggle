@@ -1,4 +1,4 @@
-﻿namespace FeatureMaster.Common.Models;
+﻿namespace FeatureManager.Common.Models;
 
 [Serializable]
 internal class FeatureSettingModel
