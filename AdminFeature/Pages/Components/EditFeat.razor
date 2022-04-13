@@ -1,0 +1,38 @@
+﻿ <p><input @bind="@newName" /></p>
+            <p>
+                <button style="color: white; background-color:blue; border-radius: 4px"
+                    onclick="@(()=>Edit(Name, newName))">
+                    Edit
+                </button>
+            </p>
+
+@code {
+
+    [Parameter]
+    public string? Name { get; set; }
+
+    [Parameter]
+    public EventCallback<string> Delete { get; set; }
+
+    [Parameter]
+    public Func<string, Task<bool>> Add { get; set; }
+
+    [Parameter]
+    public EventCallback EditButtStat { get; set; }
+
+    private bool InvalidFeatName;
+    private string newName;
+
+    private async Task Edit(string oldFeat, string newFeat)
+    {
+        if (await Add(newFeat))
+        {
+            _ = Delete.InvokeAsync(newFeat);
+            EditButtStat.InvokeAsync();
+        }
+        else
+        {
+            InvalidFeatName = true;
+        }
+    }
+}
