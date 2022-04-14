@@ -1,55 +1,22 @@
-﻿@if (editButtonStatus)
+﻿@if (_editButtonStatus)
 {
-    <p><input @bind="@newName" /></p>
+    <p><input @bind="@_newName" /></p>
     <p>
-        <button style="color: white; background-color:blue; border-radius: 4px"
+        <button class="" style="background-color:blue"
             onclick="@Edit">
             Edit
         </button>
     </p>
 
-    @if (@InvalidFeatName)
+    @if (_invalidFeatName)
     {
         <p style="color : red"> Invalid input name</p>
     }
 }
 else
 {
-    <button style="color: white; background-color:blue; padding: 20px 50px; border-radius: 4px"
+    <button class="" style="background-color:blue"
         @onclick="@EditButtonStatus">
         Edit
     </button>
-}
-
-@code {
-    [Parameter]
-    public EventCallback Delete { get; set; }
-
-    [Parameter]
-    public EventCallback<string> Add { get; set; }
-
-    private bool InvalidFeatName;
-    private string newName;
-    private bool editButtonStatus;
-
-    private void EditButtonStatus()
-    {
-        editButtonStatus = !editButtonStatus;
-    }
-
-    private void Edit()
-    {
-        try
-        {
-            Add.InvokeAsync(newName);
-
-            _ = Delete.InvokeAsync();
-            EditButtonStatus();
-        }
-        catch (Exception)
-        {
-
-            InvalidFeatName = true;
-        }
-    }
 }
