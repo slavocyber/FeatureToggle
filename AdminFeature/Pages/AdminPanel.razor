@@ -4,16 +4,21 @@
 <PageTitle>Admin Panel</PageTitle>
 
 <h3>Add new feature</h3>
+<br />
 
-<AddNewFeat Add="@Add"
-            invalidInput="@invalidInput"
-            PlaceHolder="@newFeature"></AddNewFeat>
+<AddNewFeat Add="@(name=>@Add(name))"
+            invalidInput="@_invalidInput"
+            PlaceHolder="@_newFeature"></AddNewFeat>
 
 <h3>All Features</h3>
 
-@if (features == null)
+@if (_features == null)
 {
-    <p><em>Loading...</em></p>
+    <span class="loading">Loading...</span>
+}
+else if (_features.Count == 0)
+{
+    <span>There are no features.</span>
 }
 else
 {
@@ -28,83 +33,14 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var feat in features)
+            @foreach (var feat in _features)
             {
                 <FeatureStatus Delete="@Delete"
                        OnOff="@OnOffButton"
                        Name="@feat.Key"
                        Status="@feat.Value"
-                       Add="@Add"></FeatureStatus>
+                       Add="@(name=>@Add(name))"></FeatureStatus>
             }
         </tbody>
     </table>
 }
-@code {
-    private const string URL = "FeatureToggle/features.json";
-
-    private string newFeature = "";
-    private bool invalidInput = false;
-    private Dictionary<string, bool>? features;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            //loocking for in the "wwwroot" folder
-            features = await Http.GetFromJsonAsync<Dictionary<string, bool>>(URL)
-            ?? new Dictionary<string, bool>();
-        }
-        catch (HttpRequestException) //non success
-        {
-            //logic..
-
-            throw new HttpRequestException();
-        }
-        catch (NotSupportedException) //when conect type is not valid
-        {
-            //logic..
-
-            throw new NotSupportedException();
-        }
-        catch (JsonException) //invalid json
-        {
-            //logic..
-
-            throw new JsonException();
-        }
-    }
-
-    private void OnOffButton(string key)
-    {
-        features[key] = !features[key];
-
-        _ = UpdateJson();
-    }
-
-    private void Add(string featName)
-    {
-        if (features.ContainsKey(featName))
-        {
-            invalidInput = true;
-            return;
-        }
-
-        features.Add(featName, false);
-
-        _ = UpdateJson();
-    }
-
-    private void Delete(string featName)
-    {
-        features.Remove(featName);
-
-        _ = UpdateJson();
-    }
-
-    private async Task UpdateJson()
-    {
-        invalidInput = false;
-
-        //sent http request to server
-    }
-    }
