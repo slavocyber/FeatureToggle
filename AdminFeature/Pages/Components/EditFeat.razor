@@ -1,37 +1,54 @@
-﻿ <p><input @bind="@newName" /></p>
-            <p>
-                <button style="color: white; background-color:blue; border-radius: 4px"
-                    onclick="@(()=>Edit(Name, newName))">
-                    Edit
-                </button>
-            </p>
+﻿@if (editButtonStatus)
+{
+    <p><input @bind="@newName" /></p>
+    <p>
+        <button style="color: white; background-color:blue; border-radius: 4px"
+            onclick="@Edit">
+            Edit
+        </button>
+    </p>
+
+    @if (@InvalidFeatName)
+    {
+        <p style="color : red"> Invalid input name</p>
+    }
+}
+else
+{
+    <button style="color: white; background-color:blue; padding: 20px 50px; border-radius: 4px"
+        @onclick="@EditButtonStatus">
+        Edit
+    </button>
+}
 
 @code {
+    [Parameter]
+    public EventCallback Delete { get; set; }
 
     [Parameter]
-    public string? Name { get; set; }
-
-    [Parameter]
-    public EventCallback<string> Delete { get; set; }
-
-    [Parameter]
-    public Func<string, Task<bool>> Add { get; set; }
-
-    [Parameter]
-    public EventCallback EditButtStat { get; set; }
+    public EventCallback<string> Add { get; set; }
 
     private bool InvalidFeatName;
     private string newName;
+    private bool editButtonStatus;
 
-    private async Task Edit(string oldFeat, string newFeat)
+    private void EditButtonStatus()
     {
-        if (await Add(newFeat))
+        editButtonStatus = !editButtonStatus;
+    }
+
+    private void Edit()
+    {
+        try
         {
-            _ = Delete.InvokeAsync(newFeat);
-            EditButtStat.InvokeAsync();
+            Add.InvokeAsync(newName);
+
+            _ = Delete.InvokeAsync();
+            EditButtonStatus();
         }
-        else
+        catch (Exception)
         {
+
             InvalidFeatName = true;
         }
     }
