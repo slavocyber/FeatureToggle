@@ -2,13 +2,12 @@
     <td>@Name</td>
     <td>@Status</td>
     <td>
-        <button class="btn-general" style="background-color:@ButtonColor()"
+        <button style="background-color:@ButtonColor()"
                 @onclick="@(()=>OnOff.InvokeAsync(Name))">
-            On / Off
         </button>
     </td>
     <td>
-        <button class="btn-general btn-red" @onclick="@(()=>Delete.InvokeAsync(Name))">
+        <button class="btn-red" @onclick="@(()=>Delete.InvokeAsync(Name))">
             Delete
         </button>
     </td>

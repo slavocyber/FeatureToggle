@@ -10,8 +10,7 @@ public partial class EditFeat
     [Parameter]
     public EventCallback<string> Add { get; set; }
 
-    private bool _invalidFeatName;
-    private string? _newName;
+    private string _newName;
     private bool _editButtonStatus;
 
     private void EditButtonStatus()
@@ -21,17 +20,9 @@ public partial class EditFeat
 
     private async Task Edit()
     {
-        try
-        {
-            await Add.InvokeAsync(_newName);
+        await Add.InvokeAsync(_newName);
 
-            _ = Delete.InvokeAsync();
-            EditButtonStatus();
-        }
-        catch (Exception)
-        {
-
-            _invalidFeatName = true;
-        }
+        _ = Delete.InvokeAsync();
+        EditButtonStatus();
     }
 }

@@ -1,22 +1,5 @@
-﻿@if (_editButtonStatus)
-{
-    <p><input @bind="@_newName" /></p>
-    <p>
-        <button class="" style="background-color:blue"
-            onclick="@Edit">
-            Edit
-        </button>
-    </p>
-
-    @if (_invalidFeatName)
-    {
-        <p style="color : red"> Invalid input name</p>
-    }
-}
-else
-{
-    <button class="" style="background-color:blue"
-        @onclick="@EditButtonStatus">
-        Edit
-    </button>
-}
+﻿<input @bind="@_newName" />
+<button style="background-color:blue"
+        onclick="@Edit">
+    Edit
+</button>

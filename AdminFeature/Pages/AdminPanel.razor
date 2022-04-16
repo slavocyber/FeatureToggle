@@ -12,35 +12,24 @@
 
 <h3>All Features</h3>
 
-@if (_features == null)
-{
-    <span class="loading">Loading...</span>
-}
-else if (_features.Count == 0)
-{
-    <span>There are no features.</span>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Status</th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var feat in _features)
-            {
-                <FeatureStatus Delete="@Delete"
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">On/Off</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var feat in _features)
+        {
+            <FeatureStatus Delete="@Delete"
                        OnOff="@OnOffButton"
                        Name="@feat.Key"
                        Status="@feat.Value"
                        Add="@(name=>@Add(name))"></FeatureStatus>
-            }
-        </tbody>
-    </table>
-}
+        }
+    </tbody>
+</table>
