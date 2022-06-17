@@ -13,10 +13,10 @@ public static class FeatureServiceExtensions
     /// <returns></returns>
     public static IServiceCollection AddFeatureManager(this IServiceCollection services, string connectionUrl, int intervalTime)
     {
-        _ = services
-            .AddSingleton<IFeatureManager, FeatManager>()
-            .AddSingleton<IBackgroundWorker, BackgroundWorker>(bw => new BackgroundWorker(new HttpClient(), connectionUrl, intervalTime));
+        var serviceProvaider = services.BuildServiceProvider();
 
-        return services;
+        return services
+            .AddSingleton<IFeatureManager, FeatManager>()
+            .AddSingleton<IBackgroundWorker, BackgroundWorker>(bw => new BackgroundWorker(serviceProvaider, connectionUrl, intervalTime));
     }
 }

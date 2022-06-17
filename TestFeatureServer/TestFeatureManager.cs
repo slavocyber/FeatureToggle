@@ -46,7 +46,7 @@ public class TestFeatureManager : IDisposable
 
         _httpClientMock = new HttpClient(mockHttp);
 
-        var worker = new BackgroundWorker(_httpClientMock, GetJsonURL, 100);
+        var worker = new BackgroundWorker(serviceProvider, GetJsonURL, 100);
         _featureManager = new FeatManager(worker);
 
 

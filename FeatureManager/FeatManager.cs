@@ -19,7 +19,7 @@ public class FeatManager : IFeatureManager
     /// <exception cref="NullReferenceException"></exception>
     public bool IsEnable(string nameOfFeature)
     {
-        return nameOfFeature is null || nameOfFeature.Length == 0
+        return string.IsNullOrEmpty(nameOfFeature)
             ? throw new InvalidDataException($"{nameof(nameOfFeature)}: is {nameOfFeature}")
             : _backgroundWorker.Features.FirstOrDefault(f => f.Name!.Equals(nameOfFeature, StringComparison.Ordinal))?.Status ?? false;
     }
