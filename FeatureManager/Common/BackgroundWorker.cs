@@ -1,37 +1,69 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using FeatureManager.Common.Models;
-using FeatureManager.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace FeatureManager.Common;
-public class BackgroundWorker : BackgroundService, IBackgroundWorker
+public class BackgroundWorker : BackgroundService
 {
+    public List<Feature>? Features { get; private set; }
+    
     private readonly HttpClient _httpClient;
     private readonly ILogger<BackgroundWorker>? _logger;
-    private readonly string _getJsonURL;
-    private readonly int _timeUpdate;
+    private readonly IOptionsSnapshot<SettingsUpdate>? _options;
+    
+    private string? _getJsonUrl;
+    private int _intervalUpdate;
 
-    public List<Feature>? Features { get; private set; }
-
-    public BackgroundWorker(IServiceProvider serviceProvider, string getJsonUrl, int timeUpdate)
+    public BackgroundWorker(ILogger<BackgroundWorker> logger, IOptionsSnapshot<SettingsUpdate>? options)
     {
         _httpClient = new HttpClient();
 
-        _logger = serviceProvider.GetService<ILogger<BackgroundWorker>>() ??
-            NullLogger<BackgroundWorker>.Instance;
-        _getJsonURL = getJsonUrl;
-        _timeUpdate = timeUpdate;
+        _logger = logger;
+        _options = options;
     }
 
+    public override void Dispose()
+    {
+        _logger.LogInformation($"BackgroundWorker is disposing");
+
+        base.Dispose();
+        _httpClient.Dispose();
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _logger.LogInformation("BackgroundWorker is staring");
+        stoppingToken.Register(() => _logger.LogInformation("BackgroundWorker is stopping"));
+
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            _logger.LogInformation($"BackgroundWorker doing work");
+
+            GetSettingUpdate();
+            await DoWorkAsync();
+
+            await Task.Delay(_intervalUpdate, stoppingToken);
+        }
+
+        _logger.LogInformation($"BackgroundWorker is stopping");
+    }
+    
     private async Task DoWorkAsync()
     {
+        if (string.IsNullOrEmpty(_getJsonUrl))
+        {
+            _logger.LogError("Get json url is null or empty.");
+
+            Features = null;
+            return;
+        }
+        
         try
         {
-            Features = await _httpClient.GetFromJsonAsync<List<Feature>>(_getJsonURL)
+            Features = await _httpClient.GetFromJsonAsync<List<Feature>>(_getJsonUrl)
                 ?? throw new ArgumentNullException("Get list of features from server is null");
         }
         catch (HttpRequestException) // Non success
@@ -66,29 +98,18 @@ public class BackgroundWorker : BackgroundService, IBackgroundWorker
         }
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    private void GetSettingUpdate()
     {
-        _logger.LogInformation($"BackgroundWorker is staring");
-
-        stoppingToken.Register(() => _logger.LogInformation($"BackgroundWorker is stopping"));
-
-        while (!stoppingToken.IsCancellationRequested)
+        if (_options is null)
         {
-            _logger.LogInformation($"BackgroundWorker doing work");
-
-            await DoWorkAsync();
-
-            await Task.Delay(_timeUpdate, stoppingToken);
+            _getJsonUrl = string.Empty;
+            _intervalUpdate = 5_000;
+            return;
         }
 
-        _logger.LogInformation($"BackgroundWorker is stopping");
-    }
+        _logger.LogDebug("BackgroundWorker is updating setting");
 
-    public override void Dispose()
-    {
-        _logger.LogInformation($"BackgroundWorker is disposing");
-
-        base.Dispose();
-        _httpClient.Dispose();
+        _getJsonUrl = _options.Value.UrlUpdate;
+        _intervalUpdate = _options.Value.IntervalUpdate;
     }
 }

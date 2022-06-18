@@ -1,5 +1,8 @@
-﻿using FeatureManager.Interfaces;
+﻿using FeatureManager.Common.Models;
+using FeatureManager.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace FeatureManager.Common.Extantions;
 
@@ -9,14 +12,22 @@ public static class FeatureServiceExtensions
     /// Adds FeatureManager to service collection
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="connectionUrl">way or url for json file</param>
     /// <returns></returns>
-    public static IServiceCollection AddFeatureManager(this IServiceCollection services, string connectionUrl, int intervalTime)
+    public static IServiceCollection AddFeatureManager(this IServiceCollection services)
     {
-        var serviceProvaider = services.BuildServiceProvider();
-
+        /*if (configurationSection is null)
+        {
+            configurationSection = a =>
+            {
+                a.IntervalUpdate = 1_000;
+                a.UrlUpdate = string.Empty;
+            };
+        }*/
+        
         return services
-            .AddSingleton<IFeatureManager, FeatManager>()
-            .AddSingleton<IBackgroundWorker, BackgroundWorker>(bw => new BackgroundWorker(serviceProvaider, connectionUrl, intervalTime));
+            //.Configure<SettingsUpdate>(configuration)
+            //.AddHostedService<Common.BackgroundWorker>()
+            .AddTransient<IHostedService, BackgroundWorker>()
+            .AddSingleton<IFeatManager, FeatManager>();
     }
 }

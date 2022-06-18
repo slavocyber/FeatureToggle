@@ -12,25 +12,28 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RichardSzalay.MockHttp;
 using FeatureManager;
 using System.Threading.Tasks;
+using FeatureManager.Common.Models;
+using Microsoft.Extensions.Options;
+using Moq;
 
 namespace TestFeatureServer;
 
 [TestClass]
 public class TestFeatureManager : IDisposable
 {
-    private const string BaseURL = "https://localhost:7246/*";
-    private const string GetJsonURL = "https://localhost:7246/get";
-
+    private const string GetJsonUrl = "https://localhost:7246/get";
+    private const string BaseUrl = "https://localhost:7246/*";
+    
     private readonly List<FeatureItem> _features;
-    private readonly IFeatureManager _featureManager;
+    private readonly IFeatManager _featManager;
     private readonly HttpClient _httpClientMock;
 
     public TestFeatureManager()
     {
         _features = new List<FeatureItem>()
         {
-            new FeatureItem() { Name = "new22", Status = true},
-            new FeatureItem() { Name = "new2", Status = false}
+            new() { Name = "new22", Status = true},
+            new() { Name = "new2", Status = false}
         };
 
         var serviceProvider = new ServiceCollection()
@@ -38,19 +41,28 @@ public class TestFeatureManager : IDisposable
             .BuildServiceProvider();
 
         var factory = serviceProvider.GetService<ILoggerFactory>();
-        //var loggerController = factory!.CreateLogger<JsonMaster>();
+        var loggerBw = factory!.CreateLogger<BackgroundWorker>();
 
         var mockHttp = new MockHttpMessageHandler();
-        _ = mockHttp.When(BaseURL)
+        _ = mockHttp.When(BaseUrl)
                 .Respond("features/json", JsonSerializer.Serialize(_features));
+
+        var seting = new SettingsUpdate()
+        {
+            UrlUpdate = GetJsonUrl,
+            IntervalUpdate = 200
+        };
+
+        var mockOptions = new Mock<IOptionsSnapshot<SettingsUpdate>>();
+        mockOptions.Setup(m => m.Value)
+            .Returns(seting);
 
         _httpClientMock = new HttpClient(mockHttp);
 
-        var worker = new BackgroundWorker(serviceProvider, GetJsonURL, 100);
-        _featureManager = new FeatManager(worker);
-
-
-        Task.Delay(200).Wait();
+        var worker = new BackgroundWorker(loggerBw, mockOptions.Object);
+        _featManager = new FeatManager(worker);
+        
+        Task.Delay(5_000).Wait();
     }
 
     [TestMethod]
@@ -61,10 +73,10 @@ public class TestFeatureManager : IDisposable
         //Act
 
         //Assert
-        _ = Assert.ThrowsException<InvalidDataException>(() => _featureManager.IsEnable(null!));
-        _ = Assert.ThrowsException<InvalidDataException>(() => _featureManager.IsEnable(string.Empty));
-        Assert.IsFalse(_featureManager.IsEnable("1234567890-="));
-        Assert.IsFalse(_featureManager.IsEnable("new"));
+        _ = Assert.ThrowsException<InvalidDataException>(() => _featManager.IsEnable(null!));
+        _ = Assert.ThrowsException<InvalidDataException>(() => _featManager.IsEnable(string.Empty));
+        Assert.IsFalse(_featManager.IsEnable("1234567890-="));
+        Assert.IsFalse(_featManager.IsEnable("new"));
     }
 
     [TestMethod]
@@ -75,8 +87,8 @@ public class TestFeatureManager : IDisposable
         //Act
 
         //Assert
-        Assert.IsTrue(_featureManager.IsEnable(_features[0].Name!));
-        Assert.IsFalse(_featureManager.IsEnable(_features[1].Name!));
+        Assert.IsTrue(_featManager.IsEnable(_features[0].Name!));
+        Assert.IsFalse(_featManager.IsEnable(_features[1].Name!));
     }
 
     public void Dispose()

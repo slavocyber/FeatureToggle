@@ -1,12 +1,13 @@
-﻿using FeatureManager.Interfaces;
+﻿using FeatureManager.Common;
+using FeatureManager.Interfaces;
 
 namespace FeatureManager;
 
-public class FeatManager : IFeatureManager
+public class FeatManager : IFeatManager
 {
-    private readonly IBackgroundWorker _backgroundWorker;
+    private readonly BackgroundWorker _backgroundWorker;
 
-    public FeatManager(IBackgroundWorker backgroundWorker)
+    public FeatManager(BackgroundWorker backgroundWorker)
     {
         _backgroundWorker = backgroundWorker;
     }

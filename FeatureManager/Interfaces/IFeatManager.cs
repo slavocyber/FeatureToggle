@@ -1,6 +1,6 @@
 ﻿namespace FeatureManager.Interfaces;
 
-public interface IFeatureManager
+public interface IFeatManager
 {
     public bool IsEnable(string nameOfFeature);
 }
