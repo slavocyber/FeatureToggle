@@ -2,7 +2,7 @@
 
 namespace TestFeatureManagerProj;
 
-public class TestWork
+public class TestWork : ITestWork
 {
     private readonly IFeatManager _featManager;
 
@@ -22,14 +22,19 @@ public class TestWork
     {
         while (true)
         {
+            Thread.Sleep(500);
+            
             foreach (var feature in _featuresName)
             {
-                Console.WriteLine(_featManager.IsEnable(feature) 
-                    ? $"{feature} is enable" 
+                Console.WriteLine(_featManager.IsEnable(feature)
+                    ? $"{feature} is enable"
                     : $"{feature} is disable");
             }
-            
-            Thread.Sleep(500);
         }
     }
+}
+
+public interface ITestWork
+{
+    void Start();
 }

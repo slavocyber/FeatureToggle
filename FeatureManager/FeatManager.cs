@@ -1,5 +1,6 @@
 ﻿using FeatureManager.Common;
 using FeatureManager.Interfaces;
+using Microsoft.Extensions.Hosting;
 
 namespace FeatureManager;
 
@@ -22,6 +23,6 @@ public class FeatManager : IFeatManager
     {
         return string.IsNullOrEmpty(nameOfFeature)
             ? throw new InvalidDataException($"{nameof(nameOfFeature)}: is {nameOfFeature}")
-            : _backgroundWorker.Features.FirstOrDefault(f => f.Name!.Equals(nameOfFeature, StringComparison.Ordinal))?.Status ?? false;
+            : _backgroundWorker.Features?.FirstOrDefault(f => f.Name!.Equals(nameOfFeature, StringComparison.Ordinal))?.Status ?? false;
     }
 }

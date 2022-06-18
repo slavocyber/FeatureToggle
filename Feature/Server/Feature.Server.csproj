@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\FeatureManager\FeatureManager.csproj" />
     <ProjectReference Include="..\Client\Feature.Client.csproj" />
     <ProjectReference Include="..\Shared\Feature.Shared.csproj" />
   </ItemGroup>

@@ -2,7 +2,6 @@
 using FeatureManager.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace FeatureManager.Common.Extantions;
 
@@ -13,21 +12,12 @@ public static class FeatureServiceExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IServiceCollection AddFeatureManager(this IServiceCollection services)
+    public static IServiceCollection AddFeatureManager(this IServiceCollection services, IConfiguration config)
     {
-        /*if (configurationSection is null)
-        {
-            configurationSection = a =>
-            {
-                a.IntervalUpdate = 1_000;
-                a.UrlUpdate = string.Empty;
-            };
-        }*/
-        
         return services
-            //.Configure<SettingsUpdate>(configuration)
-            //.AddHostedService<Common.BackgroundWorker>()
-            .AddTransient<IHostedService, BackgroundWorker>()
-            .AddSingleton<IFeatManager, FeatManager>();
+            .Configure<SettingsUpdate>(_ =>
+                config.GetSection(SettingsUpdate.Position))
+            .AddHostedService<BackgroundWorker>()
+            .AddTransient<IFeatManager, FeatManager>();
     }
 }
