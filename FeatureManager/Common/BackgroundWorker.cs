@@ -14,18 +14,18 @@ public class BackgroundWorker : BackgroundService
     private readonly HttpClient _httpClient;
     private readonly ILogger<BackgroundWorker>? _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IOptionsSnapshot<SettingsUpdate>? _options;
+    private readonly SettingsUpdate? _options;
     
     private string? _getJsonUrl;
     private int _intervalUpdate;
 
-    public BackgroundWorker(ILogger<BackgroundWorker> logger, IServiceScopeFactory serviceScopeFactory, IOptionsSnapshot<SettingsUpdate>? options)
+    public BackgroundWorker(ILogger<BackgroundWorker> logger, IServiceScopeFactory serviceScopeFactory, IOptions<SettingsUpdate>? options)
     {
         _httpClient = new HttpClient();
 
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
-        _options = options;
+        _options = options.Value;
     }
 
     public override void Dispose()
@@ -40,25 +40,22 @@ public class BackgroundWorker : BackgroundService
     {
         _logger.LogInformation("BackgroundWorker is staring");
         
-        using (var scope = _serviceScopeFactory.CreateScope())
+        stoppingToken.Register(() => _logger.LogInformation("BackgroundWorker is stopping"));
+
+        while (!stoppingToken.IsCancellationRequested)
         {
-            stoppingToken.Register(() => _logger.LogInformation("BackgroundWorker is stopping"));
+            _logger.LogInformation($"BackgroundWorker doing work");
 
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                _logger.LogInformation($"BackgroundWorker doing work");
+            GetSettingUpdate();
+            await DoWorkAsync();
 
-                GetSettingUpdate();
-                await DoWorkAsync();
-
-                await Task.Delay(_intervalUpdate, stoppingToken);
-            } 
+            await Task.Delay(_intervalUpdate, stoppingToken);
         }
-        
+
         _logger.LogInformation($"BackgroundWorker is stopping");
     }
     
-    private async Task DoWorkAsync()
+    private async Task GetFeaturesAsync()
     {
         if (string.IsNullOrEmpty(_getJsonUrl))
         {
@@ -105,18 +102,31 @@ public class BackgroundWorker : BackgroundService
         }
     }
 
-    private void GetSettingUpdate()
+    private bool GetSettingUpdate()
     {
         if (_options is null)
         {
             _getJsonUrl = string.Empty;
             _intervalUpdate = 5_000;
-            return;
+            
+            return false;
         }
 
         _logger.LogDebug("BackgroundWorker is updating setting");
 
-        _getJsonUrl = _options.Value.UrlUpdate;
-        _intervalUpdate = _options.Value.IntervalUpdate;
+        _getJsonUrl = _options.UrlUpdate;
+        _intervalUpdate = _options.IntervalUpdate;
+
+        return true;
+    }
+
+    private async Task DoWorkAsync()
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        
+        if (GetSettingUpdate())
+        {
+            await GetFeaturesAsync();
+        }
     }
 }

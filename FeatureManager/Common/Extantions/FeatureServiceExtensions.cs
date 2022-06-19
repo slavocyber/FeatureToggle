@@ -18,6 +18,6 @@ public static class FeatureServiceExtensions
             .Configure<SettingsUpdate>(_ =>
                 config.GetSection(SettingsUpdate.Position))
             .AddSingleton<IFeatManager, FeatManager>()
-            .AddScoped<BackgroundWorker>();
+            .AddHostedService<BackgroundWorker>();
     }
 }

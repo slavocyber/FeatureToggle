@@ -5,10 +5,6 @@ namespace FeatureManager;
 
 public class FeatManager : IFeatManager
 {
-    public FeatManager()
-    {
-    }
-
     /// <summary>
     /// Looks for input name of feature in list of features in BackgroundWorker
     /// </summary>

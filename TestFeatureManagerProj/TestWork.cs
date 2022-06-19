@@ -22,7 +22,7 @@ public class TestWork : ITestWork
     {
         while (true)
         {
-            Thread.Sleep(500);
+            Thread.Sleep(3_000);
             
             foreach (var feature in _featuresName)
             {
