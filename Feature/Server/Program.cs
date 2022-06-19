@@ -1,6 +1,5 @@
 ﻿using Feature.Server.Common;
 using Feature.Server.Interfaces;
-using FeatureManager.Common.Extantions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +11,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddLogging();
 builder.Services.AddSingleton<HttpClient>()
     .AddSingleton<IJsonMaster, JsonMaster>();
-builder.Services.AddFeatureManager(builder.Configuration);
 
 var app = builder.Build();
 

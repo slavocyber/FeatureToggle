@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using FeatureManager.Common.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,20 +9,22 @@ using Microsoft.Extensions.Options;
 namespace FeatureManager.Common;
 public class BackgroundWorker : BackgroundService
 {
-    public List<Feature>? Features { get; private set; }
+    public static List<Feature>? Features { get; private set; }
     
     private readonly HttpClient _httpClient;
     private readonly ILogger<BackgroundWorker>? _logger;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IOptionsSnapshot<SettingsUpdate>? _options;
     
     private string? _getJsonUrl;
     private int _intervalUpdate;
 
-    public BackgroundWorker(ILogger<BackgroundWorker> logger, IOptionsSnapshot<SettingsUpdate>? options)
+    public BackgroundWorker(ILogger<BackgroundWorker> logger, IServiceScopeFactory serviceScopeFactory, IOptionsSnapshot<SettingsUpdate>? options)
     {
         _httpClient = new HttpClient();
 
         _logger = logger;
+        _serviceScopeFactory = serviceScopeFactory;
         _options = options;
     }
 
@@ -36,18 +39,22 @@ public class BackgroundWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("BackgroundWorker is staring");
-        stoppingToken.Register(() => _logger.LogInformation("BackgroundWorker is stopping"));
-
-        while (!stoppingToken.IsCancellationRequested)
+        
+        using (var scope = _serviceScopeFactory.CreateScope())
         {
-            _logger.LogInformation($"BackgroundWorker doing work");
+            stoppingToken.Register(() => _logger.LogInformation("BackgroundWorker is stopping"));
 
-            GetSettingUpdate();
-            await DoWorkAsync();
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                _logger.LogInformation($"BackgroundWorker doing work");
 
-            await Task.Delay(_intervalUpdate, stoppingToken);
+                GetSettingUpdate();
+                await DoWorkAsync();
+
+                await Task.Delay(_intervalUpdate, stoppingToken);
+            } 
         }
-
+        
         _logger.LogInformation($"BackgroundWorker is stopping");
     }
     

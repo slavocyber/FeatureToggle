@@ -6,5 +6,4 @@ public class SettingsUpdate
 
     public string? UrlUpdate { get; set; } = string.Empty;
     public int IntervalUpdate { get; set; }
-
 }

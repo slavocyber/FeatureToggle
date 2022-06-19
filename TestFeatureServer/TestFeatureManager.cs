@@ -59,8 +59,8 @@ public class TestFeatureManager : IDisposable
 
         _httpClientMock = new HttpClient(mockHttp);
 
-        var worker = new BackgroundWorker(loggerBw, mockOptions.Object);
-        _featManager = new FeatManager(worker);
+        //var worker = new BackgroundWorker(loggerBw, mockOptions.Object);
+        //_featManager = new FeatManager(worker);
         
         Task.Delay(5_000).Wait();
     }
