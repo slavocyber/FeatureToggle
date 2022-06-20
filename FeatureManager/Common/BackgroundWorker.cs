@@ -13,18 +13,16 @@ public class BackgroundWorker : BackgroundService
     
     private readonly HttpClient _httpClient;
     private readonly ILogger<BackgroundWorker>? _logger;
-    private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly SettingsUpdate? _options;
     
     private string? _getJsonUrl;
     private int _intervalUpdate;
 
-    public BackgroundWorker(ILogger<BackgroundWorker> logger, IServiceScopeFactory serviceScopeFactory, IOptions<SettingsUpdate>? options)
+    public BackgroundWorker(ILogger<BackgroundWorker> logger, IOptions<SettingsUpdate>? options)
     {
         _httpClient = new HttpClient();
 
         _logger = logger;
-        _serviceScopeFactory = serviceScopeFactory;
         _options = options.Value;
     }
 
@@ -122,8 +120,6 @@ public class BackgroundWorker : BackgroundService
 
     private async Task DoWorkAsync()
     {
-        using var scope = _serviceScopeFactory.CreateScope();
-        
         if (GetSettingUpdate())
         {
             await GetFeaturesAsync();
