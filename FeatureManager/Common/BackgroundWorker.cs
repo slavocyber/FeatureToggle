@@ -13,17 +13,21 @@ public class BackgroundWorker : BackgroundService
     
     private readonly HttpClient _httpClient;
     private readonly ILogger<BackgroundWorker>? _logger;
-    private readonly SettingsUpdate? _options;
     
-    private string? _getJsonUrl;
+    private string _getJsonUrl;
     private int _intervalUpdate;
 
-    public BackgroundWorker(ILogger<BackgroundWorker> logger, IOptions<SettingsUpdate>? options)
+    public BackgroundWorker(ILogger<BackgroundWorker> logger, IOptions<SettingsUpdate> options)
     {
+        _ = logger ?? throw new ArgumentNullException(nameof(logger));
+        _ = options ?? throw new ArgumentNullException(nameof(options));
+        _ = options.Value.UrlUpdate ?? throw new ArgumentNullException(nameof(options.Value.IntervalUpdate));
+        
         _httpClient = new HttpClient();
 
         _logger = logger;
-        _options = options.Value;
+        _getJsonUrl = "https://localhost:7246/get";
+        _intervalUpdate = 5_000;
     }
 
     public override void Dispose()
@@ -44,8 +48,7 @@ public class BackgroundWorker : BackgroundService
         {
             _logger.LogInformation($"BackgroundWorker doing work");
 
-            GetSettingUpdate();
-            await DoWorkAsync();
+            await GetFeaturesAsync();
 
             await Task.Delay(_intervalUpdate, stoppingToken);
         }
@@ -67,62 +70,43 @@ public class BackgroundWorker : BackgroundService
         {
             Features = await _httpClient.GetFromJsonAsync<List<Feature>>(_getJsonUrl)
                 ?? throw new ArgumentNullException("Get list of features from server is null");
+
+            Console.WriteLine($"{Features[0].Name}: {Features[0].Status}");
         }
         catch (HttpRequestException) // Non success
         {
             _logger.LogError("An error occurred.");
 
+            _intervalUpdate = 5_000;
             Features = null;
         }
         catch (NotSupportedException) // When content type is not valid
         {
             _logger.LogError("The content type is not supported.");
 
+            _intervalUpdate = 5_000;
             Features = null;
         }
         catch (JsonException) // Invalid JSON
         {
             _logger.LogError("Invalid JSON.");
 
+            _intervalUpdate = 5_000;
             Features = null;
         }
         catch (ArgumentNullException) // Recived list of features from server is null
         {
             _logger.LogError("Invalid JSON.");
 
+            _intervalUpdate = 5_000;
             Features = null;
         }
         catch (Exception e) //unhandle exep
         {
             _logger.LogError(e, e.Message);
 
-            Features = null;
-        }
-    }
-
-    private bool GetSettingUpdate()
-    {
-        if (_options is null)
-        {
-            _getJsonUrl = string.Empty;
             _intervalUpdate = 5_000;
-            
-            return false;
-        }
-
-        _logger.LogDebug("BackgroundWorker is updating setting");
-
-        _getJsonUrl = _options.UrlUpdate;
-        _intervalUpdate = _options.IntervalUpdate;
-
-        return true;
-    }
-
-    private async Task DoWorkAsync()
-    {
-        if (GetSettingUpdate())
-        {
-            await GetFeaturesAsync();
+            Features = null;
         }
     }
 }
